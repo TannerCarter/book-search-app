@@ -1,6 +1,6 @@
-const { User, Book } = require("../models"); //Book is a sub document schema
-const { AuthenticationError } = require("apollo-server-express");
-const { signToken } = require("../utils/auth");
+const { User, Book } = require('../models');
+const { AuthenticationError } = require('apollo-server-express');
+const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
@@ -8,22 +8,22 @@ const resolvers = {
       if (context.user) {
         return await User.findOne({ _id: context.user._id });
       } else {
-        throw new AuthenticationError("Not logged in");
+        throw new AuthenticationError('Not logged in');
       }
-    },
+    }
   },
   Mutation: {
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
 
       if (!user) {
-        throw new AuthenticationError("Incorrect credentials");
+        throw new AuthenticationError('Incorrect credentials');
       }
 
       const correctPw = await user.isCorrectPassword(password);
 
       if (!correctPw) {
-        throw new AuthenticationError("Incorrect credentials");
+        throw new AuthenticationError('Incorrect credentials');
       }
 
       const token = signToken(user);
@@ -46,7 +46,7 @@ const resolvers = {
         );
         return updatedUser;
       }
-      throw new AuthenticationError("You need to be logged in!");
+      throw new AuthenticationError('You need to be logged in!')
     },
 
     removeBook: async (parent, args, context) => {
@@ -58,9 +58,9 @@ const resolvers = {
         );
         return updatedUser;
       }
-      throw new AuthenticationError("You need to be logged in!");
-    },
-  },
+      throw new AuthenticationError('You need to be logged in!')
+    }
+  }
 };
 
 module.exports = resolvers;
